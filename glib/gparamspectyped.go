@@ -10,7 +10,7 @@ import (
 // ParamSpecUInt is a go representation of a C ParamSpecUInt
 type ParamSpecUInt struct{ paramSpecUInt *C.GParamSpecUInt }
 
-// ToParamSpec wraps the given pointer in a ParamSpec instance.
+// ToParamSpecUInt wraps the given pointer in a ParamSpec instance.
 func ToParamSpecUInt(paramspecuint unsafe.Pointer) *ParamSpecUInt {
 	return &ParamSpecUInt{
 		paramSpecUInt: (*C.GParamSpecUInt)(paramspecuint),
@@ -65,4 +65,25 @@ func (p *ParamSpecUInt64) Maximum() uint {
 // DefaultValue returns the default value of this parameter.
 func (p *ParamSpecUInt64) DefaultValue() uint {
 	return (uint)(p.paramSpecUInt64.default_value)
+}
+
+// ParamSpecEnum is a go representation of a C ParamSpecEnum
+type ParamSpecEnum struct{ paramSpecEnum *C.GParamSpecEnum }
+
+// ToParamSpecEnum wraps the given pointer in a ParamSpecEnum instance.
+func ToParamSpecEnum(paramspecenum unsafe.Pointer) *ParamSpecEnum {
+	return &ParamSpecEnum{
+		paramSpecEnum: (*C.GParamSpecEnum)(paramspecenum),
+	}
+}
+
+// DefaultValue returns the default value of this parameter.
+func (p *ParamSpecEnum) DefaultValue() int {
+	return int(p.paramSpecEnum.default_value)
+}
+
+func (p *ParamSpecEnum) EnumClass() *EnumClass {
+	return &EnumClass{
+		ptr: p.paramSpecEnum.enum_class,
+	}
 }

@@ -201,6 +201,19 @@ func (v *Object) GetParamSpecUInt(name string) (*ParamSpecUInt, error) {
 	return ToParamSpecUInt((unsafe.Pointer)(paramSpec)), nil
 }
 
+// GetParamSpecEnum returns the ParamSpecEnum of a property of the underlying GObject.
+func (v *Object) GetParamSpecEnum(name string) (*ParamSpecEnum, error) {
+	cstr := C.CString(name)
+	defer C.free(unsafe.Pointer(cstr))
+
+	paramSpec := C.g_object_class_find_property(C._g_object_get_class(v.native()), (*C.gchar)(cstr))
+	if paramSpec == nil {
+		return nil, errors.New("couldn't find Property")
+	}
+
+	return ToParamSpecEnum((unsafe.Pointer)(paramSpec)), nil
+}
+
 // GetParamSpecUInt64 returns the ParamSpecUInt64 of a property of the underlying GObject.
 func (v *Object) GetParamSpecUInt64(name string) (*ParamSpecUInt64, error) {
 	cstr := C.CString(name)
