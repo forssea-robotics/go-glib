@@ -184,6 +184,23 @@ func (v *Object) GetParamSpec(name string) (*ParamSpec, error) {
 	return ToParamSpec((unsafe.Pointer)(paramSpec)), nil
 }
 
+// GetParamSpecInt returns the ParamSpecInt of a property of the underlying GObject.
+func (v *Object) GetParamSpecInt(name string) (*ParamSpecInt, error) {
+	cstr := C.CString(name)
+	defer C.free(unsafe.Pointer(cstr))
+
+	paramSpec := C.g_object_class_find_property(C._g_object_get_class(v.native()), (*C.gchar)(cstr))
+	if paramSpec == nil {
+		return nil, errors.New("couldn't find Property")
+	}
+
+	if Type(paramSpec.value_type) != TYPE_INT {
+		return nil, errors.New("Wrong property type")
+	}
+
+	return ToParamSpecInt((unsafe.Pointer)(paramSpec)), nil
+}
+
 // GetParamSpecUInt returns the ParamSpecUInt of a property of the underlying GObject.
 func (v *Object) GetParamSpecUInt(name string) (*ParamSpecUInt, error) {
 	cstr := C.CString(name)

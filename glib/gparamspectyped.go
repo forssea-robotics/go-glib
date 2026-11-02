@@ -7,6 +7,36 @@ import (
 	"unsafe"
 )
 
+// ParamSpecInt is a go representation of a C ParamSpecInt
+type ParamSpecInt struct{ paramSpecInt *C.GParamSpecInt }
+
+// ToParamSpecInt wraps the given pointer in a ParamSpec instance.
+func ToParamSpecInt(paramspecint unsafe.Pointer) *ParamSpecInt {
+	return &ParamSpecInt{
+		paramSpecInt: (*C.GParamSpecInt)(paramspecint),
+	}
+}
+
+// Unref the underlying paramater spec.
+func (p *ParamSpecInt) Unref() {
+	C.g_param_spec_unref((*C.GParamSpec)((unsafe.Pointer)(p.paramSpecInt)))
+}
+
+// Minimum returns the minimum value of this parameter.
+func (p *ParamSpecInt) Minimum() uint {
+	return (uint)(p.paramSpecInt.minimum)
+}
+
+// Maximum returns the maximum value of this parameter.
+func (p *ParamSpecInt) Maximum() uint {
+	return (uint)(p.paramSpecInt.maximum)
+}
+
+// DefaultValue returns the default value of this parameter.
+func (p *ParamSpecInt) DefaultValue() uint {
+	return (uint)(p.paramSpecInt.default_value)
+}
+
 // ParamSpecUInt is a go representation of a C ParamSpecUInt
 type ParamSpecUInt struct{ paramSpecUInt *C.GParamSpecUInt }
 
